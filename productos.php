@@ -42,6 +42,9 @@ $cartas = [
                 <th>Precio venta</th>
                 <th>Ganancia</th>
                 <th>Existencia</th>
+                <th>Cant. minima</th>
+                <th>Cant. fija</th>
+                <th>Prioridad</th>
                 <th>Editar</th>
                 <th>Eliminar</th>
             </tr>
@@ -57,6 +60,9 @@ $cartas = [
                     <td><?= '$'.$producto->venta; ?></td>
                     <td><?= '$'. floatval($producto->venta - $producto->compra); ?></td>
                     <td><?= $producto->existencia; ?></td>
+                    <td><?= $producto->cant_min; ?></td>
+                    <td><?= $producto->cant_fija; ?></td>
+                    <td><?= $producto->prioridad; ?></td>
                     <td>
                         <a class="btn btn-info" href="editar_producto.php?id=<?= $producto->id; ?>">
                             <i class="fa fa-edit"></i>

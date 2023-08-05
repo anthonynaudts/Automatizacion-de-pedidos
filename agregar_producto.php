@@ -1,9 +1,12 @@
 <?php
 include_once "encabezado.php";
 include_once "navbar.php";
+include_once "funciones.php";
 session_start();
 
 if(empty($_SESSION['usuario'])) header("location: login.php");
+
+$prioridades = obtenerPrioridades();
 
 ?>
 <div class="container">
@@ -15,9 +18,9 @@ if(empty($_SESSION['usuario'])) header("location: login.php");
         </div>
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre o descripción</label>
-            <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ej. Papas">
+            <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Red de tenis">
         </div>
-        <div class="row">
+        <div class="row mb-3">
             <div class="col">
                 <label for="compra" class="form-label">Precio compra</label>
                 <input type="number" name="compra" step="any" id="compra" class="form-control" placeholder="Precio de compra" aria-label="">
@@ -30,6 +33,10 @@ if(empty($_SESSION['usuario'])) header("location: login.php");
                 <label for="existencia" class="form-label">Existencia</label>
                 <input type="number" name="existencia" step="any" id="existencia" class="form-control" placeholder="Existencia" aria-label="">
             </div>
+            
+        </div>
+
+        <div class="row">
             <div class="col">
                 <label for="cant_min" class="form-label">Cantidad mínima almacén</label>
                 <input type="number" name="cant_min" step="any" id="cant_min" class="form-control" placeholder="Cantidad mínima" aria-label="">
@@ -38,8 +45,21 @@ if(empty($_SESSION['usuario'])) header("location: login.php");
                 <label for="cant_fija" class="form-label">Cantidad fija almacén</label>
                 <input type="number" name="cant_fija" step="any" id="cant_fija" class="form-control" placeholder="Cantidad fija" aria-label="">
             </div>
-            
+            <div class="col">
+                <label for="cant_fija" class="form-label">Prioridad compra (Dias máximos para recibir)</label>
+                <select name="id_prioridad" id="id_prioridad" class="form-control">
+                    <option value="">--Seleccionar prioridad</option>
+                    <?php
+                        foreach($prioridades as $prioridad){
+                    ?>
+                    <option value="<?= $prioridad->id_prioridad; ?>"><?= $prioridad->prioridad; ?> (Días Máximos: <?= $prioridad->tiempo_llegada_dias; ?>)</option>
+                    <?php
+                        }
+                    ?>
+                </select>
+            </div>
         </div>
+
         <div class="text-center mt-3">
             <input type="submit" name="registrar" value="Registrar" class="btn btn-primary btn-lg">
             
@@ -60,13 +80,15 @@ if(isset($_POST['registrar'])){
     $existencia = $_POST['existencia'];
     $cant_min = $_POST['cant_min'];
     $cant_fija = $_POST['cant_fija'];
+    $id_prioridad = $_POST['id_prioridad'];
     if(empty($codigo) 
     || empty($nombre) 
     || empty($compra) 
     || empty($venta)
     || empty($existencia)
     || empty($cant_min)
-    || empty($cant_fija)){
+    || empty($cant_fija)
+    || empty($id_prioridad)){
         echo'
         <div class="alert alert-danger mt-3" role="alert">
             Debes completar todos los datos.
@@ -75,7 +97,7 @@ if(isset($_POST['registrar'])){
     } 
     
     include_once "funciones.php";
-    $resultado = registrarProducto($codigo, $nombre, $compra, $venta, $existencia, $cant_min, $cant_fija);
+    $resultado = registrarProducto($codigo, $nombre, $compra, $venta, $existencia, $cant_min, $cant_fija,$id_prioridad);
     if($resultado){
         echo'
         <div class="alert alert-success mt-3" role="alert">
