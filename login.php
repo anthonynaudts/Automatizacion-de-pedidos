@@ -4,7 +4,7 @@ include_once "encabezado.php";
 <div class="container">
     <div class="row m-5 no-gutters shadow-lg">
         <div class="col-md-6 d-none d-md-block">
-            <img src="logo_principal.png" class="img-fluid" style="min-height:100%;" />
+            <img src="img/Sport_Zone_stacked.svg" class="img-fluid" style="min-height:100%;" />
         </div>
         <div class="col-md-6 bg-white p-5">
             <h3 class="pb-3">Iniciar sesión</h3>
@@ -18,7 +18,7 @@ include_once "encabezado.php";
                     </div>
 
                     <div class="pb-2">
-                        <button type="submit" name="ingresar" class="btn btn-primary w-100 font-weight-bold mt-2">Ingresar</button>
+                        <button type="submit" name="ingresar" class="btn btn-primary w-100 font-weight-bold mt-2 btn-td-color">Ingresar</button>
                     </div>
                 </form>
              </div>

@@ -1,7 +1,7 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-2 shadow   rounded">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-2 shadow rounded bg-td-color">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
-      <img src="logo.png" alt="" width="150" height="40" class="d-inline-block align-text-top">
+      <img src="img/Sport_Zone_stacked-_blanco.svg" alt="" width="150" height="40" class="d-inline-block align-text-top">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
