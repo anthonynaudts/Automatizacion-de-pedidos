@@ -44,23 +44,23 @@ $prioridades = obtenerPrioridadesSinActiva($id);
 
         <div class="row mt-3">
             <div class="col">
-                <label for="cant_min" class="form-label">Cantidad mínima almacén</label>
-                <input type="number" name="cant_min" step="any" value="<?php echo $producto->cant_min;?>" id="cant_min" class="form-control" placeholder="cant_min" aria-label="">
+                <label for="cantMin" class="form-label">Cantidad mínima almacén</label>
+                <input type="number" name="cantMin" step="any" value="<?php echo $producto->cantMin;?>" id="cantMin" class="form-control" placeholder="cantMin" aria-label="">
             </div>
             <div class="col">
-                <label for="cant_fija" class="form-label">Cantidad fija almacén</label>
-                <input type="number" name="cant_fija" step="any" value="<?php echo $producto->cant_fija;?>" id="cant_fija" class="form-control" placeholder="cant_fija" aria-label="">
+                <label for="cantFija" class="form-label">Cantidad fija almacén</label>
+                <input type="number" name="cantFija" step="any" value="<?php echo $producto->cantFija;?>" id="cantFija" class="form-control" placeholder="cantFija" aria-label="">
             </div>
             <div class="col">
-                <label for="id_prioridad" class="form-label">Prioridad compra (Dias máximos para recibir)</label>
-                <!-- <input type="number" name="id_prioridad" step="any" value="<?php echo $producto->id_prioridad;?>" id="id_prioridad" class="form-control" placeholder="id_prioridad" aria-label=""> -->
+                <label for="idPrioridad" class="form-label">Prioridad compra (Dias máximos para recibir)</label>
+                <!-- <input type="number" name="idPrioridad" step="any" value="<?php echo $producto->idPrioridad;?>" id="idPrioridad" class="form-control" placeholder="idPrioridad" aria-label=""> -->
 
-                <select name="id_prioridad" id="id_prioridad" class="form-control" >
-                    <option value="<?php echo $producto->id_prioridad;?>"><?php echo $producto->prioridad;?> (Días Máximos: <?php echo $producto->tiempo_llegada_dias; ?>)</option>
+                <select name="idPrioridad" id="idPrioridad" class="form-control" >
+                    <option value="<?php echo $producto->idPrioridad;?>"><?php echo $producto->prioridad;?> (Días Máximos: <?php echo $producto->tiempoLlegadaDias; ?>)</option>
                     <?php
                         foreach($prioridades as $prioridad){
                     ?>
-                        <option value="<?php echo $prioridad->id_prioridad; ?>"><?php echo $prioridad->prioridad; ?> (Días Máximos: <?php echo $prioridad->tiempo_llegada_dias; ?>)</option>
+                        <option value="<?php echo $prioridad->idPrioridad; ?>"><?php echo $prioridad->prioridad; ?> (Días Máximos: <?php echo $prioridad->tiempoLlegadaDias; ?>)</option>
                     <?php
                         }
                     ?>
@@ -86,17 +86,17 @@ if(isset($_POST['registrar'])){
     $compra = $_POST['compra'];
     $venta = $_POST['venta'];
     $existencia = $_POST['existencia'];
-    $cant_min = $_POST['cant_min'];
-    $cant_fija = $_POST['cant_fija'];
-    $id_prioridad = $_POST['id_prioridad'];
+    $cantMin = $_POST['cantMin'];
+    $cantFija = $_POST['cantFija'];
+    $idPrioridad = $_POST['idPrioridad'];
     if(empty($codigo) 
     || empty($nombre) 
     || empty($compra) 
     || empty($venta)
     || empty($existencia
-    || empty($cant_min)
-    || empty($cant_fija)
-    || empty($id_prioridad))){
+    || empty($cantMin)
+    || empty($cantFija)
+    || empty($idPrioridad))){
         echo'
         <div class="alert alert-danger mt-3" role="alert">
             Debes completar todos los datos.
@@ -105,7 +105,7 @@ if(isset($_POST['registrar'])){
     } 
     
     include_once "funciones.php";
-    $resultado = editarProducto($codigo, $nombre, $compra, $venta, $existencia,$cant_min, $cant_fija,$id_prioridad, $id);
+    $resultado = editarProducto($codigo, $nombre, $compra, $venta, $existencia,$cantMin, $cantFija,$idPrioridad, $id);
     if($resultado){
         echo'
         <div class="alert alert-success mt-3" role="alert">

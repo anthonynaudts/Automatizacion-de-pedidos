@@ -38,21 +38,21 @@ $prioridades = obtenerPrioridades();
 
         <div class="row">
             <div class="col">
-                <label for="cant_min" class="form-label">Cantidad mínima almacén</label>
-                <input type="number" name="cant_min" step="any" id="cant_min" class="form-control" placeholder="Cantidad mínima" aria-label="">
+                <label for="cantMin" class="form-label">Cantidad mínima almacén</label>
+                <input type="number" name="cantMin" step="any" id="cantMin" class="form-control" placeholder="Cantidad mínima" aria-label="">
             </div>
             <div class="col">
-                <label for="cant_fija" class="form-label">Cantidad fija almacén</label>
-                <input type="number" name="cant_fija" step="any" id="cant_fija" class="form-control" placeholder="Cantidad fija" aria-label="">
+                <label for="cantFija" class="form-label">Cantidad fija almacén</label>
+                <input type="number" name="cantFija" step="any" id="cantFija" class="form-control" placeholder="Cantidad fija" aria-label="">
             </div>
             <div class="col">
-                <label for="cant_fija" class="form-label">Prioridad compra (Dias máximos para recibir)</label>
-                <select name="id_prioridad" id="id_prioridad" class="form-control">
+                <label for="cantFija" class="form-label">Prioridad compra (Dias máximos para recibir)</label>
+                <select name="idPrioridad" id="idPrioridad" class="form-control">
                     <option value="">--Seleccionar prioridad</option>
                     <?php
                         foreach($prioridades as $prioridad){
                     ?>
-                    <option value="<?= $prioridad->id_prioridad; ?>"><?= $prioridad->prioridad; ?> (Días Máximos: <?= $prioridad->tiempo_llegada_dias; ?>)</option>
+                    <option value="<?= $prioridad->idPrioridad; ?>"><?= $prioridad->prioridad; ?> (Días Máximos: <?= $prioridad->tiempoLlegadaDias; ?>)</option>
                     <?php
                         }
                     ?>
@@ -78,17 +78,17 @@ if(isset($_POST['registrar'])){
     $compra = $_POST['compra'];
     $venta = $_POST['venta'];
     $existencia = $_POST['existencia'];
-    $cant_min = $_POST['cant_min'];
-    $cant_fija = $_POST['cant_fija'];
-    $id_prioridad = $_POST['id_prioridad'];
+    $cantMin = $_POST['cantMin'];
+    $cantFija = $_POST['cantFija'];
+    $idPrioridad = $_POST['idPrioridad'];
     if(empty($codigo) 
     || empty($nombre) 
     || empty($compra) 
     || empty($venta)
     || empty($existencia)
-    || empty($cant_min)
-    || empty($cant_fija)
-    || empty($id_prioridad)){
+    || empty($cantMin)
+    || empty($cantFija)
+    || empty($idPrioridad)){
         echo'
         <div class="alert alert-danger mt-3" role="alert">
             Debes completar todos los datos.
@@ -97,7 +97,7 @@ if(isset($_POST['registrar'])){
     } 
     
     include_once "funciones.php";
-    $resultado = registrarProducto($codigo, $nombre, $compra, $venta, $existencia, $cant_min, $cant_fija,$id_prioridad);
+    $resultado = registrarProducto($codigo, $nombre, $compra, $venta, $existencia, $cantMin, $cantFija,$idPrioridad);
     if($resultado){
         echo'
         <div class="alert alert-success mt-3" role="alert">

@@ -371,25 +371,25 @@ function eliminarProducto($id){
     return eliminar($sentencia, $id);
 }
 
-function editarProducto($codigo, $nombre, $compra, $venta, $existencia,$cant_min, $cant_fija,$id_prioridad, $id){
-    $sentencia = "UPDATE productos SET codigo = ?, nombre = ?, compra = ?, venta = ?, existencia = ?, cant_min = ?,cant_fija = ?,id_prioridad = ? WHERE id = ?";
-    $parametros = [$codigo, $nombre, $compra, $venta, $existencia, $cant_min, $cant_fija,$id_prioridad, $id];
+function editarProducto($codigo, $nombre, $compra, $venta, $existencia,$cantMin, $cantFija,$idPrioridad , $id){
+    $sentencia = "UPDATE productos SET codigo = ?, nombre = ?, compra = ?, venta = ?, existencia = ?, cantMin = ?,cantFija = ?,idPrioridad  = ? WHERE id = ?";
+    $parametros = [$codigo, $nombre, $compra, $venta, $existencia, $cantMin, $cantFija,$idPrioridad , $id];
     return editar($sentencia, $parametros);
 }
 
 function obtenerProductoPorId($id){
-    $sentencia = "SELECT prod.*, pp.prioridad, pp.tiempo_llegada_dias FROM productos prod left join prioridad_productos pp on pp.id_prioridad = prod.id_prioridad WHERE prod.id = ?";
+    $sentencia = "SELECT prod.*, pp.prioridad, pp.tiempoLlegadaDias FROM productos prod left join prioridad_productos pp on pp.idPrioridad  = prod.idPrioridad  WHERE prod.id = ?";
     return select($sentencia, [$id])[0];
 }
 
 // function obtenerPrioridadesSinActiva($id){
-//     $sentencia = "SELECT * FROM prioridad_productos WHERE id_prioridad <> ?";
+//     $sentencia = "SELECT * FROM prioridad_productos WHERE idPrioridad  <> ?";
 //     return select($sentencia, [$id])[0];
 // }
 
 function obtenerProductos($busqueda = null){
     $parametros = [];
-    $sentencia = "SELECT prod.*, pp.prioridad FROM productos prod left join prioridad_productos pp on pp.id_prioridad = prod.id_prioridad";
+    $sentencia = "SELECT prod.*, pp.prioridad FROM productos prod left join prioridad_productos pp on pp.idPrioridad  = prod.idPrioridad ";
     if(isset($busqueda)){
         $sentencia .= " WHERE nombre LIKE ? OR codigo LIKE ?";
         array_push($parametros, "%".$busqueda."%", "%".$busqueda."%"); 
@@ -405,13 +405,13 @@ function obtenerPrioridades(){
 
 function obtenerPrioridadesSinActiva($id){
     $parametros = [];
-    $sentencia = "SELECT * FROM prioridad_productos WHERE id_prioridad <> ".$id; 
+    $sentencia = "SELECT * FROM prioridad_productos WHERE idPrioridad  <> ".$id; 
     return select($sentencia, $parametros);
 }
 
-function registrarProducto($codigo, $nombre, $compra, $venta, $existencia, $cant_min, $cant_fija, $id_prioridad){
-    $sentencia = "INSERT INTO productos(codigo, nombre, compra, venta, existencia, cant_min, cant_fija, id_prioridad) VALUES (?,?,?,?,?,?,?,?)";
-    $parametros = [$codigo, $nombre, $compra, $venta, $existencia, $cant_min, $cant_fija, $id_prioridad];
+function registrarProducto($codigo, $nombre, $compra, $venta, $existencia, $cantMin, $cantFija, $idPrioridad ){
+    $sentencia = "INSERT INTO productos(codigo, nombre, compra, venta, existencia, cantMin, cantFija, idPrioridad ) VALUES (?,?,?,?,?,?,?,?)";
+    $parametros = [$codigo, $nombre, $compra, $venta, $existencia, $cantMin, $cantFija, $idPrioridad ];
     return insertar($sentencia, $parametros);
 }
 

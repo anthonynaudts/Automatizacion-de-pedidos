@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/estilos_personalizados.css">
     <script src="bootstrap/bootstrap.min.js"></script>
     <script src="bootstrap/bootstrap.bundle.min.js"></script>
-    <title>Ventas-PHP</title>
+    <title>Ventas Sport Zone</title>
 </head>
 <body>
     

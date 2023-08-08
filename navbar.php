@@ -51,7 +51,7 @@
             </li>
             &nbsp
             <li class="nav-item">
-                <a href="cerrar_sesion.php" class="btn btn-warning">Salir</a>
+                <a href="cerrar_sesion.php" class="btn btn-warning btn-salir">Cerrar sesión</a>
             </li>
         </ul>
     </div>
