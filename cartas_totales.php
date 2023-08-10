@@ -3,7 +3,7 @@ include_once "encabezado.php";
 ?>
 
 
-	<div class="card-deck row">
+	<div class="card-deck row d-flex justify-content-center">
 		<?php foreach($cartas as $carta){?>
 		<div class="col-xs-12 col-sm-6 col-md-3" style="color: <?=  $carta['color']?> !important">
 			<div class="card text-center">

@@ -64,13 +64,17 @@ $cartas = [
                     <td><?= $producto->cantFija; ?></td>
                     <td><?= $producto->prioridad; ?></td>
                     <td>
-                        <a class="btn btn-info" href="editar_producto.php?id=<?= $producto->id; ?>">
+                        <a class="btn btn-warning" href="editar_producto.php?id=<?= $producto->id; ?>">
                             <i class="fa fa-edit"></i>
                             Editar
                         </a>
                     </td>
                     <td>
-                        <a class="btn btn-danger" href="eliminar_producto.php?id=<?= $producto->id; ?>">
+                        <!-- <a class="btn btn-danger" href="eliminar_producto.php?id=<?= $producto->id; ?>">
+                            <i class="fa fa-trash"></i>
+                            Eliminar
+                        </a> -->
+                        <a class="btn btn-danger" onclick="eliminarProducto(<?= $producto->id; ?>)">
                             <i class="fa fa-trash"></i>
                             Eliminar
                         </a>

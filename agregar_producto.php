@@ -89,20 +89,29 @@ if(isset($_POST['registrar'])){
     || empty($cantMin)
     || empty($cantFija)
     || empty($idPrioridad)){
-        echo'
-        <div class="alert alert-danger mt-3" role="alert">
-            Debes completar todos los datos.
-        </div>';
+        echo"
+        <script>
+            Swal.fire(
+                'Campos vacíos',
+                'Debe llenar todos los campos!',
+                'warning'
+            )
+        </script>";
         return;
     } 
     
     include_once "funciones.php";
     $resultado = registrarProducto($codigo, $nombre, $compra, $venta, $existencia, $cantMin, $cantFija,$idPrioridad);
     if($resultado){
-        echo'
-        <div class="alert alert-success mt-3" role="alert">
-            Producto registrado con éxito.
-        </div>';
+        echo"
+        <script>
+            Swal.fire(
+                'Producto registrado!',
+                'El producto ha sido registrada con éxito!',
+                'success'
+            )
+        </script>
+        ";
     }
     
 }

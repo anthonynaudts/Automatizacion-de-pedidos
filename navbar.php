@@ -44,6 +44,12 @@
             Reporte ventas
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link active fw-bold" href="pedidos.php">
+            <i class="fas fa-boxes"></i> 
+            Pedidos
+            </a>
+        </li>
         </ul>
         <ul class="navbar-nav">
             <li class="nav-item">

@@ -53,8 +53,6 @@ $prioridades = obtenerPrioridadesSinActiva($id);
             </div>
             <div class="col">
                 <label for="idPrioridad" class="form-label">Prioridad compra (Dias máximos para recibir)</label>
-                <!-- <input type="number" name="idPrioridad" step="any" value="<?php echo $producto->idPrioridad;?>" id="idPrioridad" class="form-control" placeholder="idPrioridad" aria-label=""> -->
-
                 <select name="idPrioridad" id="idPrioridad" class="form-control" >
                     <option value="<?php echo $producto->idPrioridad;?>"><?php echo $producto->prioridad;?> (Días Máximos: <?php echo $producto->tiempoLlegadaDias; ?>)</option>
                     <?php
@@ -97,20 +95,34 @@ if(isset($_POST['registrar'])){
     || empty($cantMin)
     || empty($cantFija)
     || empty($idPrioridad))){
-        echo'
-        <div class="alert alert-danger mt-3" role="alert">
-            Debes completar todos los datos.
-        </div>';
+        echo"
+        <script>
+            Swal.fire(
+                'Campos vacíos',
+                'Debe llenar todos los campos!',
+                'warning'
+            )
+        </script>";
         return;
     } 
     
     include_once "funciones.php";
     $resultado = editarProducto($codigo, $nombre, $compra, $venta, $existencia,$cantMin, $cantFija,$idPrioridad, $id);
     if($resultado){
-        echo'
-        <div class="alert alert-success mt-3" role="alert">
-            Información del producto registrada con éxito.
-        </div>';
+        echo"
+        <script>
+            Swal.fire(
+                'Producto actualizado!',
+                'Información del producto registrada con éxito!',
+                'success'
+            )
+        </script>
+        ";
+
+        // echo"
+        // <div class='alert alert-success mt-3' role='alert'>
+        //     Información del producto registrada con éxito.
+        // </div>";
     }
     
 }

@@ -1,5 +1,5 @@
 <?php
-
+date_default_timezone_set("America/Santo_Domingo");
 define("PASSWORD_PREDETERMINADA", "12345678");
 define("HOY", date("Y-m-d"));
 
@@ -74,6 +74,16 @@ function obtenerClientePorId($id){
 
 function obtenerClientes(){
     $sentencia = "SELECT * FROM clientes";
+    return select($sentencia);
+}
+
+function obtenerSuplidor(){
+    $sentencia = "SELECT * FROM suplidor";
+    return select($sentencia);
+}
+
+function obtenerEstados(){
+    $sentencia = "SELECT * FROM estados";
     return select($sentencia);
 }
 
@@ -253,6 +263,87 @@ function obtenerProductosVendidos($idVenta){
     return select($sentencia, [$idVenta]);
 }
 
+function calcularTotalPedidos($pedidos){
+    $total = 0;
+    foreach ($pedidos as $pedido) {
+        $total += $pedido->montoPedido;
+    }
+    return $total;
+}
+
+function calcularProductosPedidos($pedidos){
+    $total = 0;
+    foreach ($pedidos as $pedido) {
+        foreach ($pedido->productos as $producto) {
+            $total += $producto->cantidad;
+        }
+    }
+    return $total;
+}
+
+function obtenerPedidos($fechaInicio, $fechaFin, $estado, $suplidor,$nPedido){
+    $parametros = [];
+    $sentencia  = "SELECT pedidos.*, suplidor.nombreSuplidor, estados.estado
+    FROM pedidos 
+    INNER JOIN suplidor ON suplidor.id = pedidos.idSuplidor
+    LEFT JOIN estados ON estados.idEstado = pedidos.idEstado";
+
+    if(isset($nPedido)){
+        $sentencia .= " WHERE pedidos.idPedido = ?";
+        array_push($parametros, $nPedido);
+        $pedidos = select($sentencia, $parametros);
+        return agregarProductosPedido($pedidos);
+    }
+
+    if(isset($estado)){
+        $sentencia .= " WHERE pedidos.idEstado = ?";
+        array_push($parametros, $estado);
+        $pedidos = select($sentencia, $parametros);
+        return agregarProductosPedido($pedidos);
+    }
+
+    if(isset($suplidor)){
+        $sentencia .= " WHERE pedidos.idSuplidor = ?";
+        array_push($parametros, $suplidor);
+        $pedidos = select($sentencia, $parametros);
+        return agregarProductosPedido($pedidos);
+    }
+
+    if(empty($fechaInicio) && empty($fechaFin)){
+        $sentencia .= " WHERE DATE(pedidos.fechaPedido) = ? ";
+        array_push($parametros, HOY);
+        $pedidos = select($sentencia, $parametros);
+        return agregarProductosPedido($pedidos);
+    }
+
+    if(isset($fechaInicio) && isset($fechaFin)){
+        $sentencia .= " WHERE DATE(pedidos.fechaPedido) >= ? AND DATE(pedidos.fechaPedido) <= ?";
+        array_push($parametros, $fechaInicio, $fechaFin);
+    }
+
+    $pedidos = select($sentencia, $parametros);
+   
+    return agregarProductosPedido($pedidos);
+}
+
+
+function agregarProductosPedido($pedidos){
+    foreach($pedidos as $pedido){
+        $pedido->productos = obtenerProductosPedidos($pedido->idPedido);
+    }
+    return $pedidos;
+}
+
+
+function obtenerProductosPedidos($idPedido){
+    $sentencia = "SELECT articulos_pedidos.cantidad, articulos_pedidos.precioUnitario, productos.nombre,
+    productos.compra
+    FROM articulos_pedidos
+    INNER JOIN productos ON productos.id = articulos_pedidos.idProd
+    WHERE idPedido  = ? ";
+    return select($sentencia, [$idPedido]);
+}
+
 function registrarVenta($productos, $idUsuario, $idCliente, $total){
     $sentencia =  "INSERT INTO ventas (fecha, total, idUsuario, idCliente) VALUES (?,?,?,?)";
     $parametros = [date("Y-m-d H:i:s"), $total, $idUsuario, $idCliente];
@@ -405,7 +496,9 @@ function obtenerPrioridades(){
 
 function obtenerPrioridadesSinActiva($id){
     $parametros = [];
-    $sentencia = "SELECT * FROM prioridad_productos WHERE idPrioridad  <> ".$id; 
+    $sentencia = "SELECT prioridad_productos.*, p.id FROM prioridad_productos
+    left join productos p on p.id = '".$id."'
+    WHERE p.idPrioridad <> prioridad_productos.idPrioridad"; 
     return select($sentencia, $parametros);
 }
 
@@ -428,7 +521,7 @@ function insertar($sentencia, $parametros ){
     return $respuesta->execute($parametros);
 }
 
-function eliminar($sentencia, $id ){
+function eliminar($sentencia, $id){
     $bd = conectarBaseDatos();
     $respuesta = $bd->prepare($sentencia);
     return $respuesta->execute([$id]);
