@@ -462,14 +462,30 @@ function eliminarProducto($id){
     return eliminar($sentencia, $id);
 }
 
+function eliminarPrioridad($id){
+    $sentencia = "DELETE FROM prioridad_productos WHERE idPrioridad = ?";
+    return eliminar($sentencia, $id);
+}
+
 function editarProducto($codigo, $nombre, $compra, $venta, $existencia,$cantMin, $cantFija,$idPrioridad , $id){
     $sentencia = "UPDATE productos SET codigo = ?, nombre = ?, compra = ?, venta = ?, existencia = ?, cantMin = ?,cantFija = ?,idPrioridad  = ? WHERE id = ?";
     $parametros = [$codigo, $nombre, $compra, $venta, $existencia, $cantMin, $cantFija,$idPrioridad , $id];
     return editar($sentencia, $parametros);
 }
 
+function editarPrioridad($idPrioridad, $prioridad){
+    $sentencia = "UPDATE productos SET prioridad = ? WHERE idPrioridad = ?";
+    $parametros = [$idPrioridad, $prioridad];
+    return editar($sentencia, $parametros);
+}
+
 function obtenerProductoPorId($id){
-    $sentencia = "SELECT prod.*, pp.prioridad, pp.tiempoLlegadaDias FROM productos prod left join prioridad_productos pp on pp.idPrioridad  = prod.idPrioridad  WHERE prod.id = ?";
+    $sentencia = "SELECT prod.*, pp.prioridad FROM productos prod left join prioridad_productos pp on pp.idPrioridad  = prod.idPrioridad  WHERE prod.id = ?";
+    return select($sentencia, [$id])[0];
+}
+
+function obtenerPrioridadPorId($id){
+    $sentencia = "SELECT * FROM prioridad_productos WHERE idPrioridad = ?";
     return select($sentencia, [$id])[0];
 }
 
@@ -488,9 +504,13 @@ function obtenerProductos($busqueda = null){
     return select($sentencia, $parametros);
 }
 
-function obtenerPrioridades(){
+function obtenerPrioridades($busqueda = null){
     $parametros = [];
     $sentencia = "SELECT * FROM prioridad_productos"; 
+    if(isset($busqueda)){
+        $sentencia .= " WHERE prioridad LIKE ? OR idPrioridad LIKE ?";
+        array_push($parametros, "%".$busqueda."%", "%".$busqueda."%"); 
+    } 
     return select($sentencia, $parametros);
 }
 
@@ -505,6 +525,12 @@ function obtenerPrioridadesSinActiva($id){
 function registrarProducto($codigo, $nombre, $compra, $venta, $existencia, $cantMin, $cantFija, $idPrioridad ){
     $sentencia = "INSERT INTO productos(codigo, nombre, compra, venta, existencia, cantMin, cantFija, idPrioridad ) VALUES (?,?,?,?,?,?,?,?)";
     $parametros = [$codigo, $nombre, $compra, $venta, $existencia, $cantMin, $cantFija, $idPrioridad ];
+    return insertar($sentencia, $parametros);
+}
+
+function registrarPrioridad($prioridad){
+    $sentencia = "INSERT INTO prioridad_productos(prioridad) VALUES (?)";
+    $parametros = [$prioridad];
     return insertar($sentencia, $parametros);
 }
 

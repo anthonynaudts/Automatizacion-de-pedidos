@@ -46,13 +46,13 @@ $prioridades = obtenerPrioridades();
                 <input type="number" name="cantFija" step="any" id="cantFija" class="form-control" placeholder="Cantidad fija" aria-label="">
             </div>
             <div class="col">
-                <label for="cantFija" class="form-label">Prioridad compra (Dias máximos para recibir)</label>
+                <label for="cantFija" class="form-label">Prioridad compra</label>
                 <select name="idPrioridad" id="idPrioridad" class="form-control">
                     <option value="">--Seleccionar prioridad</option>
                     <?php
                         foreach($prioridades as $prioridad){
                     ?>
-                    <option value="<?= $prioridad->idPrioridad; ?>"><?= $prioridad->prioridad; ?> (Días Máximos: <?= $prioridad->tiempoLlegadaDias; ?>)</option>
+                    <option value="<?= $prioridad->idPrioridad; ?>"><?= $prioridad->prioridad; ?></option>
                     <?php
                         }
                     ?>

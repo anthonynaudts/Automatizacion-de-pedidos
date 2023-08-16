@@ -14,11 +14,18 @@
             Inicio
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link active" href="productos.php">
+        <li class="nav-item dropdown">
+            <!-- <a class="nav-link active" href="productos.php">
                 <i class="fa fa-shopping-cart"></i>  
                 Productos
+            </a> -->
+            <a class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+              <i class="fa fa-shopping-cart"></i> Productos
             </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="productos.php">Productos</a></li>
+              <li><a class="dropdown-item" href="prioridades.php">Prioridades</a></li>
+            </ul>
         </li>
         <li class="nav-item">
             <a class="nav-link active" href="usuarios.php">
