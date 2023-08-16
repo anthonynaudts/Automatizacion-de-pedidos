@@ -457,6 +457,22 @@ function calcularGananciaProductos(){
     if($fila) return $fila[0]->total;
 }
 
+function generarNumeroUnico() {
+    $microtime = microtime();
+    list($microseconds, $seconds) = explode(' ', $microtime);
+    $milliseconds = round($microseconds * 1000);
+
+    $fecha = date("Ymd");
+    $diaSemana = date("N"); // 1 (lunes) a 7 (domingo)
+
+    $numeroUnico = sprintf("%s%s%03d", $fecha, $diaSemana, $milliseconds);
+
+    return $numeroUnico;
+}
+
+
+// $numeroUnico = generarNumeroUnico();
+
 function eliminarProducto($id){
     $sentencia = "DELETE FROM productos WHERE id = ?";
     return eliminar($sentencia, $id);
@@ -522,9 +538,9 @@ function obtenerPrioridadesSinActiva($id){
     return select($sentencia, $parametros);
 }
 
-function registrarProducto($codigo, $nombre, $compra, $venta, $existencia, $cantMin, $cantFija, $idPrioridad ){
+function registrarProducto($nombre, $compra, $venta, $existencia, $cantMin, $cantFija, $idPrioridad ){
     $sentencia = "INSERT INTO productos(codigo, nombre, compra, venta, existencia, cantMin, cantFija, idPrioridad ) VALUES (?,?,?,?,?,?,?,?)";
-    $parametros = [$codigo, $nombre, $compra, $venta, $existencia, $cantMin, $cantFija, $idPrioridad ];
+    $parametros = [generarNumeroUnico(), $nombre, $compra, $venta, $existencia, $cantMin, $cantFija, $idPrioridad ];
     return insertar($sentencia, $parametros);
 }
 

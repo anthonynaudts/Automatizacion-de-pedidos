@@ -12,10 +12,10 @@ $prioridades = obtenerPrioridades();
 <div class="container">
     <h3>Agregar producto</h3>
     <form method="post">
-        <div class="mb-3">
+        <!-- <div class="mb-3">
             <label for="codigo" class="form-label">Código de barras</label>
             <input type="text" name="codigo" class="form-control" id="codigo" placeholder="Escribe el código de barras del producto">
-        </div>
+        </div> -->
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre o descripción</label>
             <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Red de tenis">
@@ -73,7 +73,7 @@ $prioridades = obtenerPrioridades();
 </div>
 <?php
 if(isset($_POST['registrar'])){
-    $codigo = $_POST['codigo'];
+    // $codigo = $_POST['codigo'];
     $nombre = $_POST['nombre'];
     $compra = $_POST['compra'];
     $venta = $_POST['venta'];
@@ -81,8 +81,7 @@ if(isset($_POST['registrar'])){
     $cantMin = $_POST['cantMin'];
     $cantFija = $_POST['cantFija'];
     $idPrioridad = $_POST['idPrioridad'];
-    if(empty($codigo) 
-    || empty($nombre) 
+    if(empty($nombre) 
     || empty($compra) 
     || empty($venta)
     || empty($existencia)
@@ -101,7 +100,7 @@ if(isset($_POST['registrar'])){
     } 
     
     include_once "funciones.php";
-    $resultado = registrarProducto($codigo, $nombre, $compra, $venta, $existencia, $cantMin, $cantFija,$idPrioridad);
+    $resultado = registrarProducto($nombre, $compra, $venta, $existencia, $cantMin, $cantFija,$idPrioridad);
     if($resultado){
         echo"
         <script>
