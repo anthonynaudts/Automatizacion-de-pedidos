@@ -36,9 +36,9 @@ $clienteSeleccionado = (isset($_SESSION['clienteVenta'])) ? obtenerClientePorId(
                     <tr>
                         <td><?php echo $lista->codigo;?></td>
                         <td><?php echo $lista->nombre;?></td>
-                        <td>$<?php echo $lista->venta;?></td>
+                        <td>$<?php echo number_format($lista->venta,2);?></td>
                         <td><?php echo $lista->cantidad;?></td>
-                        <td>$<?php echo floatval($lista->cantidad * $lista->venta);?></td>
+                        <td>$<?php echo number_format(floatval($lista->cantidad * $lista->venta),2);?></td>
                         <td>
                             <a href="quitar_producto_venta.php?id=<?php echo $lista->id?>" class="btn btn-danger">
                                 <i class="fa fa-times"></i>
@@ -77,7 +77,7 @@ $clienteSeleccionado = (isset($_SESSION['clienteVenta'])) ? obtenerClientePorId(
 
 
         <div class="text-center mt-3">
-            <h1>Total: $<?php echo $total;?></h1>
+            <h1>Total: $<?php echo number_format($total, 2);?></h1>
             <a  class="btn btn-primary btn-lg" href="registrar_venta.php">  
                 <i class="fa fa-check"></i> 
                 Terminar venta 

@@ -12,7 +12,7 @@ include_once "encabezado.php";
 						<i class="fa <?= $carta['icono']?>"></i>
 						<?= $carta['titulo']?>
 					</h4>
-					<h2><?= $carta['total']?></h2>
+					<h2><?= number_format($carta['total'], 2)?></h2>
 
 				</div>
 

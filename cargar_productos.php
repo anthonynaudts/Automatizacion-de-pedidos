@@ -10,7 +10,10 @@ function obtenerClientePorId($id){
 }
 
 function obtenerClientes(){
-    $sentencia = "SELECT id, idPrioridad, venta, nombre FROM productos";
+    // $sentencia = "SELECT id, idPrioridad, venta, nombre FROM productos";
+    $sentencia = "SELECT ps.idProdTienda, ps.idProdSuplidor, ps.cantDisponible, ps.precioProd, ps.tiempoEntregaProd, ps.idSuplidor, p.nombre 
+    FROM ventas_php.productos_suplidor ps
+    left join productos p on p.id = ps.idProdTienda ";
     return select($sentencia);
 }
 
@@ -22,7 +25,7 @@ $datosArray = json_decode($json, true);
 // print_r($datosArray[0]["id"]);
 
 //Eliminar el ultimo elemento del array
-array_pop($datosArray);
+// array_pop($datosArray);
 foreach ($datosArray as $cliente) {
     print_r($cliente);
     echo "<br>";
@@ -38,7 +41,7 @@ $productos = array(
 print("<br><br><br><br><br><br><br>");
 // var_dump($productos);
 
-$prioridad = "entrega";
+$prioridad = "";
 
 $producto_elegido = null;
 
@@ -47,16 +50,16 @@ if ($prioridad == "entrega") {
     $tiempo_minimo_esperado = 3;
     foreach ($datosArray as $producto) {
         // print_r($producto);echo "<br>";
-        if ($producto_elegido === null || ($producto["idPrioridad"] <= $tiempo_minimo_esperado && $producto["idPrioridad"] <= $producto_elegido["idPrioridad"])) {
-            $producto_elegido = $producto;
-            if ($producto["venta"] < $producto_elegido["venta"]) {
+        if ($producto_elegido === null || ($producto["tiempoEntregaProd"] <= $tiempo_minimo_esperado && $producto["tiempoEntregaProd"] <= $producto_elegido["tiempoEntregaProd"])) {
+            // $producto_elegido = $producto;
+            if ($producto_elegido === null || $producto["precioProd"] < $producto_elegido["precioProd"]) {
                 $producto_elegido = $producto;
             }
         }
     }
 } else {
     foreach ($datosArray as $producto) {
-        if ($producto_elegido === null || ($producto["venta"] < $producto_elegido["venta"])) {
+        if ($producto_elegido === null || ($producto["precioProd"] < $producto_elegido["precioProd"])) {
             $producto_elegido = $producto;
         }
     }
@@ -64,8 +67,8 @@ if ($prioridad == "entrega") {
 
 if ($producto_elegido !== null) {
     echo "<br><br>Producto elegido: " . $producto_elegido["nombre"] . "\n";
-    echo "<br>Precio: " . $producto_elegido["venta"] . "\n";
-    echo "<br>Tiempo de entrega: " . $producto_elegido["idPrioridad"] . "\n";
+    echo "<br>Precio: " . $producto_elegido["precioProd"] . "\n";
+    echo "<br>Tiempo de entrega: " . $producto_elegido["tiempoEntregaProd"] . "\n";
 } else {
     echo "<br>No se encontró ningún producto que cumpla con las condiciones.\n";
 }

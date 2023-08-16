@@ -26,9 +26,9 @@ $ventas = obtenerVentas($fechaInicio, $fechaFin, $cliente, $usuario);
 
 $cartas = [
     ["titulo" => "No. ventas", "icono" => "fa fa-shopping-cart", "total" => count($ventas), "color" => "#A71D45"],
-    ["titulo" => "Total ventas", "icono" => "fa fa-money-bill", "total" => "$".calcularTotalVentas($ventas), "color" => "#2A8D22"],
+    ["titulo" => "Total ventas", "icono" => "fa fa-money-bill", "total" => calcularTotalVentas($ventas), "color" => "#2A8D22"],
     ["titulo" => "Productos vendidos", "icono" => "fa fa-box", "total" =>calcularProductosVendidos($ventas), "color" => "#223D8D"],
-    ["titulo" => "Ganancia", "icono" => "fa fa-wallet", "total" => "$". obtenerGananciaVentas($ventas), "color" => "#D55929"],
+    ["titulo" => "Ganancia", "icono" => "fa fa-wallet", "total" => obtenerGananciaVentas($ventas), "color" => "#D55929"],
 ];
 
 $clientes = obtenerClientes();
@@ -106,7 +106,7 @@ $usuarios = obtenerUsuarios();
                     <td><?= $venta->id;?></td>
                     <td><?= $venta->fecha;?></td>
                     <td><?= $venta->cliente;?></td>
-                    <td>$<?= $venta->total;?></td>
+                    <td>$<?= number_format($venta->total,2);?></td>
                     <td><?= $venta->usuario;?></td>
                     <td>
                         <table class="table">
@@ -115,8 +115,8 @@ $usuarios = obtenerUsuarios();
                                     <td><?= $producto->nombre;?></td>
                                     <td><?= $producto->cantidad;?></td>
                                     <td> X </td>
-                                    <td>$<?=  $producto->precio ;?></td>
-                                    <th>$<?= $producto->cantidad * $producto->precio ;?></th>
+                                    <td><?=  number_format($producto->precio,2) ;?></td>
+                                    <th><?= number_format($producto->cantidad * $producto->precio,2) ;?></th>
                                 </tr>
                                 <?php }?>
                         </table>

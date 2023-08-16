@@ -5,10 +5,10 @@ include_once "funciones.php";
 session_start();
 if(empty($_SESSION['usuario'])) header("location: login.php");
 $cartas = [
-    ["titulo" => "Total ventas", "icono" => "fa fa-money-bill", "total" => "$".obtenerTotalVentas(), "color" => "#A71D45"],
-    ["titulo" => "Ventas hoy", "icono" => "fa fa-calendar-day", "total" => "$".obtenerTotalVentasHoy(), "color" => "#2A8D22"],
-    ["titulo" => "Ventas semana", "icono" => "fa fa-calendar-week", "total" => "$".obtenerTotalVentasSemana(), "color" => "#223D8D"],
-    ["titulo" => "Ventas mes", "icono" => "fa fa-calendar-alt", "total" => "$".obtenerTotalVentasMes(), "color" => "#D55929"],
+    ["titulo" => "Total ventas", "icono" => "fa fa-money-bill", "total" => obtenerTotalVentas(), "color" => "#A71D45"],
+    ["titulo" => "Ventas hoy", "icono" => "fa fa-calendar-day", "total" => obtenerTotalVentasHoy(), "color" => "#2A8D22"],
+    ["titulo" => "Ventas semana", "icono" => "fa fa-calendar-week", "total" => obtenerTotalVentasSemana(), "color" => "#223D8D"],
+    ["titulo" => "Ventas mes", "icono" => "fa fa-calendar-alt", "total" => obtenerTotalVentasMes(), "color" => "#D55929"],
 ];
 
 $totales = [
