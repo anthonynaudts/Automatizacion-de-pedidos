@@ -9,17 +9,33 @@ function obtenerClientePorId($id){
     if($cliente) return $cliente[0];
 }
 
-function obtenerClientes(){
+function obtenerProductosSuplidores($idProd){
     // $sentencia = "SELECT id, idPrioridad, venta, nombre FROM productos";
     $sentencia = "SELECT ps.idProdTienda, ps.idProdSuplidor, ps.cantDisponible, ps.precioProd, ps.tiempoEntregaProd, ps.idSuplidor, p.nombre 
     FROM ventas_php.productos_suplidor ps
-    left join productos p on p.id = ps.idProdTienda ";
+    left join productos p on p.id = ps.idProdTienda where ps.idProdTienda = {$idProd}";
     return select($sentencia);
 }
 
-// print_r((array)obtenerClientes());
 
-$json = json_encode(obtenerClientes());
+-- Buscar para pedir productos
+SELECT id, codigo, nombre, compra, venta, existencia, cantMin, cantFija, idPrioridad
+FROM ventas_php.productos p
+left join articulos_pedidos ap on ap.idProd = p.id 
+left join pedidos p2 on p2.idPedido = ap.idPedido 
+where p.existencia <= p.cantMin 
+and (p2.idEstado is null or p2.idEstado = 3)
+
+
+
+-- Buscar productos suplidores
+select ps.idProdTienda, ps.idProdSuplidor, ps.cantDisponible, ps.precioProd, ps.tiempoEntregaProd, ps.idSuplidor, p.nombre 
+FROM ventas_php.productos_suplidor ps
+left join productos p on p.id = ps.idProdTienda
+where idProdTienda = 1
+
+
+$json = json_encode(obtenerProductosSuplidores(1));
 $datosArray = json_decode($json, true);
 // print_r($datosArray);
 // print_r($datosArray[0]["id"]);
@@ -67,30 +83,11 @@ if ($prioridad == "entrega") {
 
 if ($producto_elegido !== null) {
     echo "<br><br>Producto elegido: " . $producto_elegido["nombre"] . "\n";
-    echo "<br>Precio: " . $producto_elegido["precioProd"] . "\n";
+    echo "<br>Precio: " . number_format($producto_elegido["precioProd"],2) . "\n";
     echo "<br>Tiempo de entrega: " . $producto_elegido["tiempoEntregaProd"] . "\n";
 } else {
     echo "<br>No se encontró ningún producto que cumpla con las condiciones.\n";
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
