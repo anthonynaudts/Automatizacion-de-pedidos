@@ -103,9 +103,11 @@ function gruposPorSuplidor(){
 
     $json = json_encode(productosPreOrden());
     $productosPreOrden = json_decode($json, true);
+    if ($productosPreOrden == null){
+        return $gruposPorSuplidor =null;
+    }
+
     foreach ($productosPreOrden as $productoPO) {
-        // print_r($productoPO);
-        // echo "<br>";
         elegirProductos(obtenerProductosSuplidores($productoPO["id"]),$productoPO["idPrioridad"], $productoPO["cantPedir"]);
     }
 
@@ -135,6 +137,9 @@ function gruposPorSuplidor(){
 
 function ordenesPorSuplidor(){
     $datosPedidos = gruposPorSuplidor();
+    if($datosPedidos == null){
+        return;
+    }
     foreach ($datosPedidos as $PS) {
         $totalPedido = 0; 
         $idSuplidor = "";
@@ -156,8 +161,48 @@ function ordenesPorSuplidor(){
 ordenesPorSuplidor();
 
 function registrarPedido($PS, $totalPedido, $idSuplidor, $nombreSuplidor){
-    echo "Total: {$totalPedido} <br> Suplidor: {$idSuplidor}  - {$nombreSuplidor}<br><br>";
-    foreach ($PS as $prod) {
+    // echo "Total: {$totalPedido} <br> Suplidor: {$idSuplidor}  - {$nombreSuplidor}<br><br>";
+    // foreach ($PS as $prod) {
+        // print_r($prod);
+        // echo "<style>th,td{border:5px solid transparent; text-align:left;}</style>";
+        // echo "<table>
+        //     <tr>
+        //         <th>Código</th>
+        //         <th>Nombre producto</th>
+        //         <th>Precio Unitario</th>
+        //         <th>Cantidad</th>
+        //         <th>Subtotal</th>
+        //     </tr>
+        //     <tr>
+        //         <td>{$prod["idProdSuplidor"]}</td>
+        //         <td>{$prod["nombre"]}</td>
+        //         <td>{$prod["precioProd"]}</td>
+        //         <td>{$prod["cantPedir"]}</td>
+        //         <td>".$prod['precioProd'] * $prod['cantPedir']."</td>
+        //     </tr>
+        // </table>";
+        // echo "<br>";
+    // }
+
+    // return;
+    $sentencia =  "INSERT INTO pedidos (fechaPedido, montoPedido, idEstado, idSuplidor) VALUES (?,?,?,?)";
+    $parametros = [date("Y-m-d H:i:s"), $totalPedido, '1', $idSuplidor];
+
+    $resultadoPedido = insertar($sentencia, $parametros);
+    if($resultadoPedido){
+        $idPedido = obtenerUltimoIdPedido();
+        $productosRegistrados = registrarProductosPedido($PS, $idPedido);
+        return $resultadoPedido && $productosRegistrados;
+    }
+}
+
+function obtenerUltimoIdPedido(){
+    $sentencia  = "SELECT idPedido FROM pedidos ORDER BY idPedido DESC LIMIT 1";
+    return select($sentencia)[0]->idPedido;
+}
+
+function registrarProductosPedido($productos, $idPedido){
+    foreach ($productos as $prod) {
         // print_r($prod);
         echo "<style>th,td{border:5px solid transparent; text-align:left;}</style>";
         echo "<table>
@@ -169,7 +214,7 @@ function registrarPedido($PS, $totalPedido, $idSuplidor, $nombreSuplidor){
                 <th>Subtotal</th>
             </tr>
             <tr>
-                <td>{$prod["idProdSuplidor"]}</td>
+                <td>{$prod["idProdTienda"]}</td>
                 <td>{$prod["nombre"]}</td>
                 <td>{$prod["precioProd"]}</td>
                 <td>{$prod["cantPedir"]}</td>
@@ -178,25 +223,12 @@ function registrarPedido($PS, $totalPedido, $idSuplidor, $nombreSuplidor){
         </table>";
         echo "<br>";
     }
-
-    return;
-    // $sentencia =  "INSERT INTO pedidos (fechaPedido, montoPedido, idEstado, idSuplidor) VALUES (?,?,?,?)";
-    // $parametros = [date("Y-m-d H:i:s"), $total, $idUsuario, $idCliente];
-
-    // $resultadoVenta = insertar($sentencia, $parametros);
-    // if($resultadoVenta){
-    //     $idVenta = obtenerUltimoIdVenta();
-    //     $productosRegistrados = registrarProductosVenta($productos, $idVenta);
-    //     return $resultadoVenta && $productosRegistrados;
-    // }
-}
-
-function registrarProductosPedido($productos, $idVenta){
-    $sentencia = "INSERT INTO productos_ventas (cantidad, precio, idProducto, idVenta) VALUES (?,?,?,?)";
-    foreach ($productos as $producto ) {
-        $parametros = [$producto->cantidad, $producto->venta, $producto->id, $idVenta];
+    // return;
+    $sentencia = "INSERT INTO articulos_pedidos (idPedido, idProd, cantidad, precioUnitario) VALUES (?,?,?,?)";
+    foreach ($productos as $producto) {
+        $parametros = [$idPedido, $producto["idProdTienda"], $producto["cantPedir"], $producto['precioProd']];
         insertar($sentencia, $parametros);
-        descontarProductos($producto->id, $producto->cantidad);
+        // descontarProductos($producto->id, $producto->cantidad);
     }
     return true;
 }

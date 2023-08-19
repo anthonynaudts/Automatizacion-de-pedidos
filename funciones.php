@@ -491,7 +491,10 @@ function generarNumeroUnico() {
 }
 
 
-// $numeroUnico = generarNumeroUnico();
+function confirmarPedido($idPedido){
+    $sentencia = "update pedidos set idEstado = 2 WHERE idPedido = ?";
+    return eliminar($sentencia, $idPedido);
+}
 
 function eliminarProducto($id){
     $sentencia = "DELETE FROM productos WHERE id = ?";
