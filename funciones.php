@@ -3,6 +3,26 @@ date_default_timezone_set("America/Santo_Domingo");
 define("PASSWORD_PREDETERMINADA", "12345678");
 define("HOY", date("Y-m-d"));
 
+
+function productosPreOrden(){
+    $sentencia = "SELECT id, codigo, nombre, compra, venta, existencia, cantMin, cantFija, idPrioridad
+    FROM ventas_php.productos p
+    left join articulos_pedidos ap on ap.idProd = p.id 
+    left join pedidos p2 on p2.idPedido = ap.idPedido 
+    where p.existencia <= p.cantMin 
+    and (p2.idEstado is null or p2.idEstado = 3)";
+    return select($sentencia);
+    
+}
+
+// $json = json_encode(productosPreOrden());
+// $datosArray = json_decode($json, true);
+
+// foreach ($datosArray as $cliente) {
+//     print_r($cliente);
+//     echo "<br>";
+// }
+
 function iniciarSesion($usuario, $password){
     $sentencia = "SELECT id, usuario FROM usuarios WHERE usuario  = ?";
     $resultado = select($sentencia, [$usuario]);
