@@ -31,7 +31,7 @@ $pedidos = obtenerPedidos($fechaInicio, $fechaFin, $estado, $suplidor, $nPedido)
 
 $cartas = [
     ["titulo" => "No. Pedidos", "icono" => "fa fa-shopping-cart", "total" => count($pedidos), "color" => "#A71D45"],
-    ["titulo" => "Total invertido", "icono" => "fa fa-money-bill", "total" => "$".calcularTotalPedidos($pedidos), "color" => "#2A8D22"],
+    ["titulo" => "Total invertido", "icono" => "fa fa-money-bill", "total" => calcularTotalPedidos($pedidos), "color" => "#2A8D22"],
     ["titulo" => "Productos pedidos", "icono" => "fa fa-box", "total" =>calcularProductosPedidos($pedidos), "color" => "#223D8D"],
 ];
 
@@ -173,10 +173,10 @@ $estados = obtenerEstados();
             <?php foreach($pedidos as $pedido) {?>
                 <tr>
                     <td><?= $pedido->idPedido;?></td>
-                    <td><?= $pedido->fechaPedido;?></td>
+                    <td><?=date_format(new DateTime($pedido->fechaPedido),'d/m/Y');?></td>
                     <td><?= $pedido->fechaRecepcion;?></td>
                     <td><?= $pedido->nombreSuplidor;?></td>
-                    <td>$<?= $pedido->montoPedido;?></td>
+                    <td>$<?= number_format($pedido->montoPedido,2);?></td>
                     <td><?= $pedido->estado;?></td>
                     <td>
                         <table class="table">
@@ -185,8 +185,8 @@ $estados = obtenerEstados();
                                     <td><?= $producto->nombre;?></td>
                                     <td><?= $producto->cantidad;?></td>
                                     <td> X </td>
-                                    <td>$<?=  $producto->precioUnitario ;?></td>
-                                    <th>$<?= $producto->cantidad * $producto->precioUnitario ;?></th>
+                                    <td>$<?=  number_format($producto->precioUnitario,2);?></td>
+                                    <th>$<?= number_format($producto->cantidad * $producto->precioUnitario,2);?></th>
                                 </tr>
                                 <?php }?>
                         </table>

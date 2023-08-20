@@ -182,12 +182,12 @@ function ordenesPorSuplidor(){
 
 
 
-        // $idPedido = registrarPedido($PS, $totalPedido, $idSuplidor);
+        $idPedido = registrarPedido($PS, $totalPedido, $idSuplidor);
         // ERROR Activar para usar en producción
         // sleep(10);
         // [p] Asignar idPedido de la funcion registrarPedido
 
-        $idPedido = 1;
+        // $idPedido = 1;
         enviarCorreo($PS, $totalPedido, $idSuplidor, $nombreSuplidor,$idPedido,$idPrioridad);
         // return;
         // echo "<hr>";
