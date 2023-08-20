@@ -30,7 +30,7 @@ function productosPreOrden(){
 
 function obtenerProductosSuplidores($idProd){
     // $sentencia = "SELECT id, idPrioridad, venta, nombre FROM productos";
-    $sentencia = "SELECT ps.idProdTienda, ps.idProdSuplidor, ps.cantDisponible, ps.precioProd, ps.tiempoEntregaProd, ps.idSuplidor, sp.nombreSuplidor, p.nombre 
+    $sentencia = "SELECT ps.idProdTienda, ps.idProdSuplidor, ps.cantDisponible, ps.precioProd, ps.tiempoEntregaProd, ps.idSuplidor, sp.nombreSuplidor, p.nombre, p.idPrioridad
     FROM ventas_php.productos_suplidor ps
     left join productos p on p.id = ps.idProdTienda
     left join suplidor sp on sp.id = ps.idSuplidor
@@ -39,19 +39,11 @@ function obtenerProductosSuplidores($idProd){
 }
 
 function elegirProductos($productosSuplidores, $idPrioridad, $cantPedir){
-    // echo "<br>";
     $json = json_encode($productosSuplidores);
     // $json = json_encode(obtenerProductosSuplidores(1));
     $datosProductosSuplidores = json_decode($json, true);
 
-
-    // foreach ($datosProductosSuplidores as $cliente) {
-    //     print_r($cliente);
-    //     echo "<br>";
-    // }
     // idPrioridad: 1- Menor costo   2- Menor tiempo entrega
-    // $prioridad = "entrega";
-    // $cantidadFija = 60;
 
     $producto_elegido = null;
 
@@ -99,7 +91,7 @@ function elegirProductos($productosSuplidores, $idPrioridad, $cantPedir){
 
 echo "<br>";
 $gruposPorSuplidor = array();
-
+$gruposPorPrioridad = array();
 // Recorrer los arrays y agrupar los elementos por idSuplidor
 function gruposPorSuplidor(){
 
@@ -116,48 +108,88 @@ function gruposPorSuplidor(){
     global $OrdenDeProductosPedir;
     foreach ($OrdenDeProductosPedir as $array) {
         $idSuplidor = $array["idSuplidor"];
-        if (!isset($gruposPorSuplidor[$idSuplidor])) {
-            $gruposPorSuplidor[$idSuplidor] = [];
+        $idPrioridad = $array["idPrioridad"];
+        $idProdTienda = $array["idProdTienda"];
+        
+        if ($idPrioridad === 1) {
+            // Agrupar por idSuplidor
+            if (!isset($gruposPorSuplidor[$idSuplidor])) {
+                $gruposPorSuplidor[$idSuplidor] = [];
+            }
+            $gruposPorSuplidor[$idSuplidor][] = $array;
+        } else {
+            if (!isset($gruposPorSuplidor[$idSuplidor.$idProdTienda.$idPrioridad])) {
+                $gruposPorSuplidor[$idSuplidor.$idProdTienda.$idPrioridad] = [];
+            }
+            $gruposPorSuplidor[$idSuplidor.$idProdTienda.$idPrioridad][] = $array;
+            // Agregar al array sin agrupar
+            // if (!isset($gruposPorSuplidor["otros"])) {
+            //     $gruposPorSuplidor["otros"] = [];
+            // }
+            // $gruposPorSuplidor["otros"][] = $array;
         }
-        $gruposPorSuplidor[$idSuplidor][] = $array;
+
     }
+
+    // print_r($gruposPorSuplidor);echo"<hr>";
 
     // echo "<hr>";
     // foreach ($gruposPorSuplidor as $prod) {
     //     print_r($prod);
-    //     echo "<br>";
+    //     // foreach ($prod as $prod2) {print_r($prod2);}
+    //     echo "<br><br><br><br><br><br>";
     // }
-
+    // echo "<hr>";
+    // foreach ($sinAgrupar as $prod) {
+    //         print_r($prod);
+    //         foreach ($prod as $prod2) {
+    //             print_r($prod2);
+    //             echo "<br><br>";
+    //         }
+    //         echo "<br><br>";
+    //     }
     return $gruposPorSuplidor;
 }
 
-// var_dump(gruposPorSuplidor());
-
-
-// Resultado: $gruposPorSuplidor contiene los arrays agrupados por idSuplidor
-// print_r(gruposPorSuplidor());
 
 function ordenesPorSuplidor(){
     $datosPedidos = gruposPorSuplidor();
+    // print_r($datosPedidos);
+    // echo "<hr>";
+
     if($datosPedidos == null){
         return;
     }
+
     foreach ($datosPedidos as $PS) {
+        // print_r($PS);
         $totalPedido = 0; 
         $idSuplidor = "";
         foreach ($PS as $porSuplidor) {
+            // echo "<br><hr>";
+            // print_r($porSuplidor);
             // print_r($porSuplidor["cantPedir"] * $porSuplidor["precioProd"]);
             $totalPedido += $porSuplidor["cantPedir"] * $porSuplidor["precioProd"];
             $idSuplidor = $porSuplidor["idSuplidor"];
+            $idPrioridad = $porSuplidor["idPrioridad"];
             $nombreSuplidor = $porSuplidor["nombreSuplidor"];
             // print_r(" ".$porSuplidor["cantPedir"] ." ". $porSuplidor["precioProd"]);
             // echo "<br>";
         }
+        
+
+        // echo "{$totalPedido}";
+
+
+
         // $idPedido = registrarPedido($PS, $totalPedido, $idSuplidor);
-        sleep(10);
+        // ERROR Activar para usar en producción
+        // sleep(10);
+        // [p] Asignar idPedido de la funcion registrarPedido
+
         $idPedido = 1;
-        enviarCorreo($PS, $totalPedido, $idSuplidor, $nombreSuplidor,$idPedido);
-        return;
+        enviarCorreo($PS, $totalPedido, $idSuplidor, $nombreSuplidor,$idPedido,$idPrioridad);
+        // return;
         // echo "<hr>";
 
     }
@@ -200,7 +232,7 @@ function registrarProductosPedido($productos, $idPedido){
 }
 
 
-function enviarCorreo($PS, $totalPedido, $idSuplidor, $nombreSuplidor,$idPedido){
+function enviarCorreo($PS, $totalPedido, $idSuplidor, $nombreSuplidor,$idPedido, $idPrioridad){
     // require 'PHPMailer/PHPMailerAutoload.php'; 
     // require 'PHPMailer/class.phpmailer.php';
 
@@ -235,7 +267,6 @@ function enviarCorreo($PS, $totalPedido, $idSuplidor, $nombreSuplidor,$idPedido)
         <td>".number_format($prod['precioProd'] * $prod['cantPedir'], 2)."</td>
     </tr>";
     }
-
 
     $mensaje_email = "<!DOCTYPE html>
     <html lang='en'>
@@ -288,6 +319,7 @@ function enviarCorreo($PS, $totalPedido, $idSuplidor, $nombreSuplidor,$idPedido)
     </head>
     <body>
         <p>Saludos, distinguidos {$nombreSuplidor}, estamos requiriendo de los siguientes productos</p>
+        <p>".($idPrioridad == 2) ? "Estos productos son requeridos lo más pronto posible":""."</p>
         <table class='bd-sp bor-tb'>
             <caption>Orden de compra SportZone</caption>
             <tr>
@@ -318,6 +350,8 @@ function enviarCorreo($PS, $totalPedido, $idSuplidor, $nombreSuplidor,$idPedido)
     // $mensaje_email = 'Mensaje de prueba';
 
     $mail->Body = $mensaje_email;
+    
+    // TODO Activar envío de correos
     // $mail->send();
     // if($mail->send()) {
     //     echo "Enviado correctamente";
