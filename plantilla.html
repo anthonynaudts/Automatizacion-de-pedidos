@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <style>
+        body{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        *{
+            box-sizing: border-box;
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .bd-sp{
+            border-spacing: 0;
+        }
+        .bor-tb *{
+            border: 1px solid #383838;
+            
+        }
+        caption{
+            font-weight: bold;
+            background-color: #fe7112;
+            color: white;
+            padding: 4px 1px;
+        }
+        .bor-tb th{
+            background-color: #f8d2b9;
+        }
+
+        .bor-tb td{
+            padding: 2px 4px;
+        }
+        .btn-confirmar{
+            width: 100%;
+            margin: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        p{
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <p>Saludos, distinguidos {nombreSuplidor}, estamos requiriendo de los siguientes productos</p>
+    <table class='bd-sp bor-tb'>
+        <caption>Orden de compra SportZone</caption>
+        <tr>
+          <th>Código</th>
+          <th>Nombre producto</th>
+          <th>Precio Unitario</th>
+          <th>Cantidad</th>
+          <th>Sub-Total</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>A1</td>
+          <td>B1</td>
+          <td>A1</td>
+          <td>B1</td>
+        </tr>
+      </table>
+      <br>
+      <table border:0;>
+        <tr style='font-size:20px;'>
+          <th>Monto total:</th>
+          <td>10,232</td>
+        </tr>
+      </table>
+      <div class='btn-confirmar' >
+        <a href='#' style='text-decoration: none;padding: 6px 10px; background-color: #fe7112; color:white; font-weight:bold; border-radius:3px;'>¡Confirmar pedido!</a>
+      </div>
+</body>
+</html>

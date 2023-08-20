@@ -2,6 +2,8 @@
 date_default_timezone_set("America/Santo_Domingo");
 define("PASSWORD_PREDETERMINADA", "12345678");
 define("HOY", date("Y-m-d"));
+require 'PHPMailer/PHPMailerAutoload.php'; 
+require 'PHPMailer/class.phpmailer.php';
 
 $OrdenDeProductosPedir = array();
 
@@ -149,42 +151,23 @@ function ordenesPorSuplidor(){
             $idSuplidor = $porSuplidor["idSuplidor"];
             $nombreSuplidor = $porSuplidor["nombreSuplidor"];
             // print_r(" ".$porSuplidor["cantPedir"] ." ". $porSuplidor["precioProd"]);
-            echo "<br>";
+            // echo "<br>";
         }
-        registrarPedido($PS, $totalPedido, $idSuplidor, $nombreSuplidor);
-        // echo $idSuplidor."  " . $totalPedido; 
-        echo "<hr>";
+        // $idPedido = registrarPedido($PS, $totalPedido, $idSuplidor);
+        sleep(10);
+        $idPedido = 1;
+        enviarCorreo($PS, $totalPedido, $idSuplidor, $nombreSuplidor,$idPedido);
+        return;
+        // echo "<hr>";
 
     }
 }
 
 ordenesPorSuplidor();
 
-function registrarPedido($PS, $totalPedido, $idSuplidor, $nombreSuplidor){
-    // echo "Total: {$totalPedido} <br> Suplidor: {$idSuplidor}  - {$nombreSuplidor}<br><br>";
-    // foreach ($PS as $prod) {
-        // print_r($prod);
-        // echo "<style>th,td{border:5px solid transparent; text-align:left;}</style>";
-        // echo "<table>
-        //     <tr>
-        //         <th>Código</th>
-        //         <th>Nombre producto</th>
-        //         <th>Precio Unitario</th>
-        //         <th>Cantidad</th>
-        //         <th>Subtotal</th>
-        //     </tr>
-        //     <tr>
-        //         <td>{$prod["idProdSuplidor"]}</td>
-        //         <td>{$prod["nombre"]}</td>
-        //         <td>{$prod["precioProd"]}</td>
-        //         <td>{$prod["cantPedir"]}</td>
-        //         <td>".$prod['precioProd'] * $prod['cantPedir']."</td>
-        //     </tr>
-        // </table>";
-        // echo "<br>";
-    // }
-
-    // return;
+function registrarPedido($PS, $totalPedido, $idSuplidor){
+    
+    return;
     $sentencia =  "INSERT INTO pedidos (fechaPedido, montoPedido, idEstado, idSuplidor) VALUES (?,?,?,?)";
     $parametros = [date("Y-m-d H:i:s"), $totalPedido, '1', $idSuplidor];
 
@@ -192,7 +175,8 @@ function registrarPedido($PS, $totalPedido, $idSuplidor, $nombreSuplidor){
     if($resultadoPedido){
         $idPedido = obtenerUltimoIdPedido();
         $productosRegistrados = registrarProductosPedido($PS, $idPedido);
-        return $resultadoPedido && $productosRegistrados;
+        // return $resultadoPedido && $productosRegistrados;
+        return $idPedido;
     }
 }
 
@@ -201,38 +185,148 @@ function obtenerUltimoIdPedido(){
     return select($sentencia)[0]->idPedido;
 }
 
+function obtenerCorreoSuplidor($idSuplidor){
+    $sentencia  = "SELECT emailPedidos FROM suplidor WHERE {$idSuplidor}";
+    return select($sentencia)[0]->emailPedidos;
+}
+
 function registrarProductosPedido($productos, $idPedido){
-    foreach ($productos as $prod) {
-        // print_r($prod);
-        echo "<style>th,td{border:5px solid transparent; text-align:left;}</style>";
-        echo "<table>
-            <tr>
-                <th>Código</th>
-                <th>Nombre producto</th>
-                <th>Precio Unitario</th>
-                <th>Cantidad</th>
-                <th>Subtotal</th>
-            </tr>
-            <tr>
-                <td>{$prod["idProdTienda"]}</td>
-                <td>{$prod["nombre"]}</td>
-                <td>{$prod["precioProd"]}</td>
-                <td>{$prod["cantPedir"]}</td>
-                <td>".$prod['precioProd'] * $prod['cantPedir']."</td>
-            </tr>
-        </table>";
-        echo "<br>";
-    }
-    // return;
     $sentencia = "INSERT INTO articulos_pedidos (idPedido, idProd, cantidad, precioUnitario) VALUES (?,?,?,?)";
     foreach ($productos as $producto) {
         $parametros = [$idPedido, $producto["idProdTienda"], $producto["cantPedir"], $producto['precioProd']];
         insertar($sentencia, $parametros);
-        // descontarProductos($producto->id, $producto->cantidad);
     }
     return true;
 }
 
+
+function enviarCorreo($PS, $totalPedido, $idSuplidor, $nombreSuplidor,$idPedido){
+    // require 'PHPMailer/PHPMailerAutoload.php'; 
+    // require 'PHPMailer/class.phpmailer.php';
+
+    $mail = new PHPMailer;
+    $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+    $mail->SMTPDebug = 0;
+    $mail->CharSet = 'UTF-8';
+    $mail->isSMTP();
+    $mail->Host = 'smtp.office365.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'xtreme1208@hotmail.com';
+    $mail->Password = 'Xtr3m31516!!';
+    $mail->SMTPSecure = 'tls';
+    $mail->Port = 587;
+    $mail->setFrom('xtreme1208@hotmail.com', 'Sport Zone');
+
+
+    $correoSuplidor = obtenerCorreoSuplidor($idSuplidor);
+
+    $mail->addAddress($correoSuplidor, $nombreSuplidor);
+
+    $mail->Subject = "Nuevo Pedido - {$nombreSuplidor}!";
+    $mail->IsHTML(true);
+
+    $tablaProductos = "";
+    foreach ($PS as $prod) { 
+        $tablaProductos .= "<tr>
+        <td>{$prod["idProdSuplidor"]}</td>
+        <td>{$prod["nombre"]}</td>
+        <td>".number_format($prod["precioProd"],2)."</td>
+        <td>{$prod["cantPedir"]}</td>
+        <td>".number_format($prod['precioProd'] * $prod['cantPedir'], 2)."</td>
+    </tr>";
+    }
+
+
+    $mensaje_email = "<!DOCTYPE html>
+    <html lang='en'>
+    <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <style>
+            body{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            *{
+                box-sizing: border-box;
+                font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+            .bd-sp{
+                border-spacing: 0;
+            }
+            .bor-tb *{
+                border: 1px solid #383838;
+                
+            }
+            caption{
+                font-weight: bold;
+                background-color: #fe7112;
+                color: white;
+                padding: 4px 1px;
+            }
+            .bor-tb th{
+                background-color: #f8d2b9;
+            }
+    
+            .bor-tb td{
+                padding: 2px 4px;
+            }
+            .btn-confirmar{
+                width: 100%;
+                margin: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            p{
+                text-align: left;
+                margin-bottom: 6px;
+            }
+        </style>
+    </head>
+    <body>
+        <p>Saludos, distinguidos {$nombreSuplidor}, estamos requiriendo de los siguientes productos</p>
+        <table class='bd-sp bor-tb'>
+            <caption>Orden de compra SportZone</caption>
+            <tr>
+              <th>Código</th>
+              <th>Nombre producto</th>
+              <th>Precio Unitario</th>
+              <th>Cantidad</th>
+              <th>Sub-Total</th>
+            </tr>
+            {$tablaProductos}
+    </table>
+    <br>
+    <table border:0;>
+      <tr style='font-size:20px;'>
+        <th>Monto total:</th>
+        <td>".number_format($totalPedido,2)."</td>
+      </tr>
+    </table>
+    <div class='btn-confirmar'>
+      <a href='http://localhost/confirmar_pedido.php?idPedido={$idPedido}' style='text-decoration: none;padding: 6px 10px; background-color: #fe7112; color:white; font-weight:bold; border-radius:3px;'>¡Confirmar pedido!</a>
+    </div>
+    </body>
+    </html>";
+
+
+
+
+    // $mensaje_email = 'Mensaje de prueba';
+
+    $mail->Body = $mensaje_email;
+    // $mail->send();
+    // if($mail->send()) {
+    //     echo "Enviado correctamente";
+    // } else {
+    //     echo "Error al enviar";
+    // }
+
+    $mail->clearAddresses();
+}
 
 
 
