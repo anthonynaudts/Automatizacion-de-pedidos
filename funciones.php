@@ -346,6 +346,28 @@ function obtenerProductosPedidos($idPedido){
     return select($sentencia, [$idPedido]);
 }
 
+function obtenerPedidosPendientes($suplidor){
+    $parametros = [];
+    $sentencia  = "SELECT pedidos.*, suplidor.nombreSuplidor, estados.estado
+    FROM pedidos 
+    INNER JOIN suplidor ON suplidor.id = pedidos.idSuplidor
+    LEFT JOIN estados ON estados.idEstado = pedidos.idEstado
+    WHERE pedidos.idEstado != 3";
+
+    $pedidos = select($sentencia);
+
+    if(isset($suplidor)){
+        $sentencia .= " and pedidos.idSuplidor = ?";
+        array_push($parametros, $suplidor);
+        $pedidos = select($sentencia, $parametros);
+        // return agregarProductosPedido($pedidos);
+    }
+
+    
+    return $pedidos;
+    // return agregarProductosPedido($pedidos);
+}
+
 function registrarVenta($productos, $idUsuario, $idCliente, $total){
     $sentencia =  "INSERT INTO ventas (fecha, total, idUsuario, idCliente) VALUES (?,?,?,?)";
     $parametros = [date("Y-m-d H:i:s"), $total, $idUsuario, $idCliente];
@@ -796,7 +818,7 @@ function enviarCorreo($PS, $totalPedido, $idSuplidor, $nombreSuplidor,$idPedido,
         <p>Saludos, distinguidos {$nombreSuplidor}, estamos requiriendo de los siguientes productos</p>
         <p>{$mensajePrioridad}</p>
         <table class='bd-sp bor-tb'>
-            <caption>Orden de compra SportZone</caption>
+            <caption>Orden de compra SportZone (#{$idPedido})</caption>
             <tr>
               <th>Código</th>
               <th>Nombre producto</th>
