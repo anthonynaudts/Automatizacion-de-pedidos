@@ -175,7 +175,7 @@ $estados = obtenerEstados();
                 <tr>
                     <td><?= $pedido->idPedido;?></td>
                     <td><?=date_format(new DateTime($pedido->fechaPedido),'d/m/Y');?></td>
-                    <td><?= $pedido->fechaRecepcion;?></td>
+                    <td><?= date_format(new DateTime($pedido->fechaRecepcion),'d/m/Y');?></td>
                     <td><?= $pedido->nombreSuplidor;?></td>
                     <td>$<?= number_format($pedido->montoPedido,2);?></td>
                     <td><?= $pedido->estado;?></td>
