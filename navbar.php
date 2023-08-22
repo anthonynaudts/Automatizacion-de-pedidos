@@ -15,10 +15,6 @@
             </a>
         </li>
         <li class="nav-item dropdown">
-            <!-- <a class="nav-link active" href="productos.php">
-                <i class="fa fa-shopping-cart"></i>  
-                Productos
-            </a> -->
             <a class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
               <i class="fa fa-shopping-cart"></i> Productos
             </a>
@@ -52,10 +48,6 @@
             </a>
         </li>
         <li class="nav-item dropdown">
-            <!-- <a class="nav-link active fw-bold" href="pedidos.php">
-            <i class="fas fa-boxes"></i> 
-            Pedidos
-            </a> -->
             <a class="nav-link dropdown-toggle text-white fw-bold" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
               <i class="fas fa-boxes"></i>  Pedidos
             </a>
@@ -69,7 +61,7 @@
             <li class="nav-item">
                 <a href="perfil.php" class="btn btn-info" >Perfil</a>
             </li>
-            &nbsp
+            &nbsp;
             <li class="nav-item">
                 <a href="cerrar_sesion.php" class="btn btn-warning btn-salir">Cerrar sesión</a>
             </li>

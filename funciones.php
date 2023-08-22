@@ -360,12 +360,9 @@ function obtenerPedidosPendientes($suplidor){
         $sentencia .= " and pedidos.idSuplidor = ?";
         array_push($parametros, $suplidor);
         $pedidos = select($sentencia, $parametros);
-        // return agregarProductosPedido($pedidos);
     }
-
     
     return $pedidos;
-    // return agregarProductosPedido($pedidos);
 }
 
 function registrarVenta($productos, $idUsuario, $idCliente, $total){
@@ -631,7 +628,6 @@ function elegirProductos($productosSuplidores, $idPrioridad, $cantPedir){
     }
 }
 
-echo "<br>";
 $gruposPorSuplidor = array();
 $gruposPorPrioridad = array();
 function gruposPorSuplidor(){
@@ -850,6 +846,26 @@ function enviarCorreo($PS, $totalPedido, $idSuplidor, $nombreSuplidor,$idPedido,
 }
 
 
+
+
+function actualizarPedidoRecibido($idPedido){
+    $sentencia = "update pedidos set idEstado = 3, fechaRecepcion = NOW() WHERE idPedido = ?";
+    return eliminar($sentencia, $idPedido);
+}
+
+function editarExistencia($idProd, $cantidad){
+    $sentencia = "UPDATE productos SET existencia = existencia + ? WHERE id = ?";
+    $parametros = [$cantidad, $idProd];
+    return editar($sentencia, $parametros);
+}
+
+function recepcionPedidos($idPedido, $productos){
+    // return $idPedido.$productos[0]->cantidad;
+    actualizarPedidoRecibido($idPedido);
+    foreach($productos as $producto){
+        editarExistencia($producto->idProd,$producto->cantidad);
+    }
+}
 
 
 // Fin Pedidos automáticos

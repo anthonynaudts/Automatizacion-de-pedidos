@@ -25,25 +25,30 @@ foreach($pedidos as $pedido) {
     }
 }
 if(isset($_POST['recibirPedido'])){
-    
+    echo recepcionPedidos($pedido->idPedido, $pedido->productos);
+    echo "<script>
+    Swal.fire({
+        title: 'Pedido recibido!',
+        text: 'El pedido ha sido recibido correctamente!',
+        icon: 'success',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aceptar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'pedidos_pendientes.php'
+        }
+    })
+</script>";
 }
-echo $pedido->idPedido;
-print_r($pedido->productos);
+// echo $pedido->idPedido;
+// print_r($pedido->productos);
+// print_r($_SERVER);
 
-// echo( $_SERVER["HTTP_REFERER"]);
 ?>
 <div class="container">
     <h2 class="mb-3">Recepción de pedido</h2>
-        <!-- <div class="col">
-                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="row mb-1">
-                    <div class="input-group mb-3 w-50">
-                        <span class="input-group-text fw-bold" id="basic-addon1">Número pedido</span>
-                        <input type="text" class="form-control" name="nPedido" placeholder="1" aria-label="1" aria-describedby="basic-addon1">
-                        <input class="btn btn-warning" type="submit" name="buscarPorPedido" id="buscarPorPedido" value="Buscar pedido">
-                    </div>
-                </form>
-    </div> -->
-
     <?php if(count($pedidos) > 0){?>
 
 
@@ -56,7 +61,7 @@ print_r($pedido->productos);
                 </tr>
                 <tr>
                     <td><span class="fw-bold">fecha pedido:</span> <?= date_format(new DateTime($pedido->fechaPedido),'d/m/Y');?></td>
-                    <td><span class="fw-bold">Estado:</span> <?= $pedido->estado;?></td>
+                    <td <?php echo ($pedido->estado == "Pedido recibido")? "style='background-color:#84e388 !important'": ""?>><span class="fw-bold">Estado:</span> <?= $pedido->estado;?></td>
                 </tr>
                 <?php }?>
             </thead>
@@ -67,36 +72,21 @@ print_r($pedido->productos);
             <tr>
                 <th>Nombre producto</th>
                 <th class="text-center">Cantidad</th>
-                <!-- <th>Precio</th> -->
-                <!-- <th>Suplidor</th>
-                <th>Monto pedido</th>
-                <th>Estado</th>
-                <th>Productos</th> -->
             </tr>
         </thead>
         <tbody>
-            <!-- <?php foreach($pedidos as $pedido) {?>
-                <tr>
-                    <td><?= $pedido->idPedido;?></td>
-                    <td><?=date_format(new DateTime($pedido->fechaPedido),'d/m/Y');?></td>
-                    <td><?= $pedido->fechaRecepcion;?></td>
-                    <td><?= $pedido->nombreSuplidor;?></td>
-                    <td>$<?= number_format($pedido->montoPedido,2);?></td>
-                    <td><?= $pedido->estado;?></td>
-                    <td> -->
+            <?php foreach($pedidos as $pedido) {?>
             <?php foreach($pedido->productos as $producto) {?>
                 <tr>
                 <td><?= $producto->nombre;?></td>
                 <td class="text-center"><?= $producto->cantidad;?></td>
                 </tr>
-            <?php }
-            print_r($pedido->productos);
-            ?>
-            <!-- <?php }?> -->
+            <?php }?>
+            <?php }?>
         </tbody>
     </table>
     <div class="mt-5 text-center">
-        <form action="<?php echo $_SERVER["HTTP_REFERER"]; ?>" method="post" class="row mb-1">
+        <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post" class="row mb-1">
             <div class="w-100">
                 <?php
                     if($pedidoRecibido){
