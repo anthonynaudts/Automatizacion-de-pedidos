@@ -51,11 +51,18 @@
             Reporte ventas
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link active fw-bold" href="pedidos.php">
+        <li class="nav-item dropdown">
+            <!-- <a class="nav-link active fw-bold" href="pedidos.php">
             <i class="fas fa-boxes"></i> 
             Pedidos
+            </a> -->
+            <a class="nav-link dropdown-toggle text-white fw-bold" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+              <i class="fas fa-boxes"></i>  Pedidos
             </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="pedidos.php">Pedidos</a></li>
+              <li><a class="dropdown-item" href="pedidos_pendientes.php">Pedidos pendientes</a></li>
+            </ul>
         </li>
         </ul>
         <ul class="navbar-nav">

@@ -10,10 +10,9 @@
 </body>
 </html>
 <?php
+session_start();
 include_once "funciones.php";
 
-
-session_start();
 $productos = $_SESSION['lista'];
 $idUsuario = $_SESSION['idUsuario'];
 $total = calcularTotalLista($productos);

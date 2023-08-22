@@ -338,7 +338,7 @@ function agregarProductosPedido($pedidos){
 
 
 function obtenerProductosPedidos($idPedido){
-    $sentencia = "SELECT articulos_pedidos.cantidad, articulos_pedidos.precioUnitario, productos.nombre,
+    $sentencia = "SELECT articulos_pedidos.idProd,articulos_pedidos.cantidad, articulos_pedidos.precioUnitario, productos.nombre,
     productos.compra
     FROM articulos_pedidos
     INNER JOIN productos ON productos.id = articulos_pedidos.idProd

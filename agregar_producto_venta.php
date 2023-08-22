@@ -10,8 +10,8 @@
 </body>
 </html>
 <?php   
-    include_once "funciones.php";
     session_start();
+    include_once "funciones.php";
     if(isset($_POST['agregar'])){
     
         if(isset($_POST['codigo'])) {

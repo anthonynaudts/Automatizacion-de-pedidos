@@ -1,8 +1,8 @@
 <?php
+session_start();
 include_once "encabezado.php";
 include_once "navbar.php";
 include_once "funciones.php";
-session_start();
 
 if(empty($_SESSION['usuario'])) header("location: login.php");
 
@@ -11,21 +11,29 @@ if (!$idPedido) {
     echo 'No se ha seleccionado el cliente';
     exit;
 }
-include_once "funciones.php";
+// include_once "funciones.php";
 
-
-if(isset($_POST['buscarPorPedido'])){
-    if(empty($_POST['nPedido'])) header("location: recepcion_pedido.php");
+if(isset($_POST['buscar'])){
+    if(empty($_POST['inicio']) || empty($_POST['fin'])) header("location: pedidos.php");
 }
 
-// $nPedido = (isset($_POST['nPedido'])) ? $_POST['nPedido'] : null;
-
 $pedidos = obtenerPedidos(null, null, null, null, $idPedido);
+$pedidoRecibido = false;
+foreach($pedidos as $pedido) {
+    if($pedido->estado == "Pedido recibido"){
+        $pedidoRecibido = true;
+    }
+}
+if(isset($_POST['recibirPedido'])){
+    
+}
+echo $pedido->idPedido;
+print_r($pedido->productos);
 
-
+// echo( $_SERVER["HTTP_REFERER"]);
 ?>
 <div class="container">
-    <h2 class="mb-3">Recepción de pedidos</h2>
+    <h2 class="mb-3">Recepción de pedido</h2>
         <!-- <div class="col">
                 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="row mb-1">
                     <div class="input-group mb-3 w-50">
@@ -81,13 +89,28 @@ $pedidos = obtenerPedidos(null, null, null, null, $idPedido);
                 <td><?= $producto->nombre;?></td>
                 <td class="text-center"><?= $producto->cantidad;?></td>
                 </tr>
-            <?php }?>
+            <?php }
+            print_r($pedido->productos);
+            ?>
             <!-- <?php }?> -->
         </tbody>
     </table>
     <div class="mt-5 text-center">
-        // ERROR Configurar boton para cambiar estado
-        <a href="#" style='text-decoration: none;padding: 6px 10px; background-color: #fe7112; color:white; font-weight:bold; border-radius:3px; font-size: 20px;'>¡Recibir pedido!</a>
+        <form action="<?php echo $_SERVER["HTTP_REFERER"]; ?>" method="post" class="row mb-1">
+            <div class="w-100">
+                <?php
+                    if($pedidoRecibido){
+                        ?>
+                        <p class="fw-bold text-danger" style="font-size:20px;">Este pedido ha sido recibido anteriormente.</p>
+                        <?php
+                    }else{
+                        ?>
+                        <input class="btn" style='padding: 6px 10px; background-color: #fe7112; color:white; font-weight:bold; border-radius:3px; font-size: 18px;' type="submit" name="recibirPedido" id="recibirPedido" value="¡Recibir pedido!">
+                        <?php
+                    }
+                ?>
+            </div>
+        </form>
     </div>
     <?php }?>
     <?php if(count($pedidos) < 1){?>
