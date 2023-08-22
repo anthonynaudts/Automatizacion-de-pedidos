@@ -576,7 +576,7 @@ $OrdenDeProductosPedir = array();
 
 function productosPreOrden(){
     $sentencia = "SELECT id, codigo, nombre, compra, venta, existencia, cantMin, cantFija, idPrioridad,(cantFija - existencia) as cantPedir
-    FROM ventas_php.productos p
+    FROM productos p
     left join articulos_pedidos ap on ap.idProd = p.id 
     left join pedidos p2 on p2.idPedido = ap.idPedido 
     where p.existencia <= p.cantMin 
@@ -587,7 +587,7 @@ function productosPreOrden(){
 
 function obtenerProductosSuplidores($idProd){
     $sentencia = "SELECT ps.idProdTienda, ps.idProdSuplidor, ps.cantDisponible, ps.precioProd, ps.tiempoEntregaProd, ps.idSuplidor, sp.nombreSuplidor, p.nombre, p.idPrioridad
-    FROM ventas_php.productos_suplidor ps
+    FROM productos_suplidor ps
     left join productos p on p.id = ps.idProdTienda
     left join suplidor sp on sp.id = ps.idSuplidor
     where ps.idProdTienda = {$idProd}";
@@ -840,7 +840,7 @@ function enviarCorreo($PS, $totalPedido, $idSuplidor, $nombreSuplidor,$idPedido,
     $mail->Body = $mensaje_email;
     
     // TODO Activar envío de correos
-    // $mail->send();
+    $mail->send();
 
     $mail->clearAddresses();
 }
@@ -904,7 +904,7 @@ function editar($sentencia, $parametros ){
 
 function conectarBaseDatos() {
 	$host = "localhost";
-	$db   = "ventas_php";
+	$db   = "auto_pedido";
 	$user = "root";
 	$pass = "";
 	$charset = 'utf8mb4';

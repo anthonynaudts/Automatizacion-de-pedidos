@@ -1,7 +1,7 @@
 <?php
 include_once "encabezado.php";
 ?>
-<div class="container">
+<div style="height:90vh;" class="container d-flex justify-content-center align-items-center">
     <div class="row m-5 no-gutters shadow-lg">
         <div class="col-md-6 d-none d-md-block">
             <img src="img/Sport_Zone_stacked.svg" class="img-fluid" style="min-height:100%;" />
