@@ -732,11 +732,11 @@ function enviarCorreo($PS, $totalPedido, $idSuplidor, $nombreSuplidor,$idPedido,
     $mail->isSMTP();
     $mail->Host = 'smtp.office365.com';
     $mail->SMTPAuth = true;
-    $mail->Username = 'xtreme1208@hotmail.com';
-    $mail->Password = 'Xtr3m31516!!';
+    $mail->Username = '';
+    $mail->Password = '';
     $mail->SMTPSecure = 'tls';
     $mail->Port = 587;
-    $mail->setFrom('xtreme1208@hotmail.com', 'Sport Zone');
+    $mail->setFrom('', 'Sport Zone');
 
     $correoSuplidor = obtenerCorreoSuplidor($idSuplidor);
 
